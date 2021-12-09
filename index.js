@@ -23,7 +23,7 @@ const server = http.createServer(function (req, res) {
     // let method = req.method.toLowerCase();
     // console.log(path , routes[path])
     let route =
-    typeof routes[path] !== "undefined" ? routes[path] : routes["home"];
+    typeof routes[path] !== "undefined" ? routes[path] : routes["404"];
 
     let data = {
         path: path,

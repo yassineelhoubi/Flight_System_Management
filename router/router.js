@@ -23,4 +23,10 @@ module.exports = routes = {
           res.write(html);
           res.end("\n");
     },
+    404:function (data,res) {
+        let html = ejs.render(fs.readFileSync("./views/404.ejs", "utf8"));
+        res.writeHead(200);
+        res.write(html);
+        res.end("\n");
+    }
 }
