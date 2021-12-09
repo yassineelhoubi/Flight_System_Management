@@ -3,7 +3,6 @@ var ejs = require('ejs');
 const fs=require('fs');
 const PORT = process.env.PORT || 8080;
 const url = require("url");
-
 let routes = require('./router/router')
 const server = http.createServer(function (req, res) {
 
@@ -14,20 +13,21 @@ const server = http.createServer(function (req, res) {
 
     // let subPath = path.split('/')[1];
     // // console.log(path);
-    // if (path == "") {
-    //     path = "home";
-    // } else {
-    //     path = path.split("/")[0]
-    // }
+    if (path == "") {
+        path = "home";
+    } else {
+        path = path.split("/")[0]
+    }
     // let qs = parsedUrl.query
     // let headers = req.headers;
     // let method = req.method.toLowerCase();
-    console.log(path , routes[path])
+    // console.log(path , routes[path])
     let route =
     typeof routes[path] !== "undefined" ? routes[path] : routes["home"];
+
     let data = {
-        path: path
-        // url: parsedURL.pathname,
+        path: path,
+        url: parsedURL.pathname,
         // query: queries,
         // headers: headers,
         // method: method
