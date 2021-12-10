@@ -14,7 +14,7 @@ const server = http.createServer(function (req, res) {
     // let subPath = path.split('/')[1];
     // // console.log(path);
     if (path == "") {
-        path = "home";
+        path = "index";
     } else {
         path = path.split("/")[0]
     }
