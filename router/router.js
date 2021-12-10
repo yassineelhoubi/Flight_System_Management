@@ -11,11 +11,20 @@ module.exports = routes = {
         res.write(assets);
         res.end("\n");
       },
-    home: function(data, res) {
-        let html = ejs.render(fs.readFileSync("./views/home.ejs", "utf8"));
-          res.writeHead(200);
-          res.write(html);
-          res.end("\n");
+    index: function(data, res) {
+        // let html = ejs.render(fs.readFileSync("./views/home.ejs", "utf8"));
+        //   res.writeHead(200);
+        //   res.write(html);
+        //   res.end("\n");
+        ejs.renderFile('./views/index.ejs',{name:"test"},  function(err, str){
+          res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
+                 if (err) {
+                     console.log(err)
+                         res.end();
+                         } else {
+                         res.end(str);
+                         }
+             });
     },
     test:function(data, res) {
         let html = ejs.render(fs.readFileSync("./views/test.ejs", "utf8"));
