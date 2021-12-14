@@ -16,14 +16,14 @@
     <header>
         <%- include('./templates/navbar.ejs'); %>
             <section id="header" class="d-flex align-items-center mx-auto">
-                <div class="constainer w-100 mx-5">
+                <div class="constainer lg-w-75 sm-w-100 mx-5 mx-lg-auto ">
 
                     <form class="main-form w-100">
                         <h3 class="litle_card">Travel Organization</h3>
                         <div class="row">
                             <div class="col-md-9">
                                 <div class="row">
-                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                    <div class=" col-sm-6 col-12">
                                         <label>City Departure</label>
                                         <select class="form-control" name="Any">
                                             <option hidden selected>City</option>
@@ -33,8 +33,8 @@
                                             <option>Fes</option>
                                         </select>
                                     </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
-                                        <label>Ariver Town</label>
+                                    <div class=" col-sm-6 col-12">
+                                        <label>arrival city</label>
                                         <select class="form-control" name="Any">
                                             <option hidden selected>City</option>
                                             <option>Safi</option>
@@ -43,26 +43,20 @@
                                             <option>Fes</option>
                                         </select>
                                     </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
-                                        <label>Departure time</label>
-                                        <input class="form-control" type="text" name="00.0">
-                                    </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+
+                                    <div class=" col-sm-6 col-12">
                                         <label>departure date</label>
                                         <input class="form-control" type="date" type="text" name="Any">
                                     </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
-                                        <label>Date Ariver</label>
+                                    <div class=" col-sm-6 col-12">
+                                        <label>Arrival date</label>
                                         <input class="form-control" type="date" name="Any">
                                     </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
-                                        <label>Heur Ariver</label>
-                                        <input class="form-control" type="text" name="00.0">
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 d-flex align-items-center justify-content-center">
-                                <a href="#" class="btn btn-primary">Rechercher</a>
+                                <a href="#" class="btn btn-primary">Search</a>
                             </div>
                         </div>
                     </form>

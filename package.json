@@ -5,13 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js" 
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.15",
-    "ejs": "^3.1.6"
+    "ejs": "^3.1.6",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "mysql": "^2.18.1"
   }
 }
