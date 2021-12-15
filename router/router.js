@@ -44,8 +44,8 @@ module.exports = routes = {
                 let dateTime = obj.fields.departDate + ' ' + hours + ':' + minutes + ':' + seconds;
 
                 let fetchedData = await fetcher.get(Queries.getFlights(obj.fields.departStation, obj.fields.arrivalStation, dateTime));
-                console.log(fetchedData);
-                ejs.renderFile('./views/bookFlights.ejs', { name: "test" }, function (err, str) {
+
+                ejs.renderFile('./views/bookFlights.ejs', { data: fetchedData }, function (err, str) {
                     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                     if (err) {
                         console.log(err)

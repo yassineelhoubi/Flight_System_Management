@@ -15,20 +15,19 @@
     <section>
         <div class="container">
             <div class="mt-5">
-          
-    
+                <% for(var i=0; i < data.length; i++) { %>
                 <div
                     class="d-style btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100 my-2 py-3 shadow-sm">
                     <!-- Basic Plan -->
                     <div class="row align-items-center">
                         <div class="col-12 col-md-4">
                             <h4 class="pt-3 text-170 text-600 text-primary-d1 letter-spacing">
-                                casa to safi
+                                <%= data[i].departureStation%> to <%= data[i].arrivalStation%>
                             </h4>
     
                             <div class="text-secondary-d1 text-120">
                                 <span class="ml-n15 align-text-bottom">Dhs</span><span
-                                    class="text-180">12124</span> / Person
+                                    class="text-180"><%= data[i].price%></span> / Passenger
                             </div>
                         </div>
     
@@ -36,23 +35,39 @@
                             <li>
                                 <i class="fa fa-plane text-success-m2 text-110 mr-2 mt-1"></i>
                                 <span>
-                                    <span class="text-110">safi airline</span>
+                                    <span class="text-110"><%= data[i].companyName%></span>
                                 </span>
                             </li>
                             
-                            <li class="mt-25">
-                                <i class="fa fa-check text-success-m2 text-110 mr-2 mt-1"></i>
-                                <span class="text-110">
-                                    Vol Direct
-                                </span>
-                            </li>
-    
-                            <li class="mt-25">
-                                <i class="fa fa-times text-danger-m3 text-110 mr-25 mt-1"></i>
-                                <span class="text-110">
-                                    Escale
-                                </span>
-                            </li>
+                            <% if (data[i].locations == null) { %>
+                                <li class="mt-25">
+                                    <i class="fa fa-check text-success-m2 text-110 mr-2 mt-1"></i>
+                                    <span class="text-110">
+                                        Vol Direct
+                                    </span>
+                                </li>
+        
+                                <li class="mt-25">
+                                    <i class="fa fa-times text-danger-m3 text-110 mr-25 mt-1"></i>
+                                    <span class="text-110">
+                                        Escale
+                                    </span>
+                                </li>
+                                <%} else { %>
+                                <li class="mt-25">
+                                    <i class="fa fa-times text-danger-m3 text-110 mr-25 mt-1"></i>
+                                    <span class="text-110">
+                                        Vol Direct
+                                    </span>
+                                </li>
+        
+                                <li class="mt-25">
+                                    <i class="fa fa-check text-success-m2 text-110 mr-2 mt-1"></i>
+                                    <span class="text-110">
+                                        Escale
+                                    </span>
+                                </li>
+                                <% } %>
     
     
                         </ul>
@@ -64,7 +79,7 @@
     
                 </div>
         
-    
+                <% } %>
             </div>
         </div>  
     </section>
