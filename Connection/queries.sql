@@ -33,6 +33,6 @@ create table reservation (
 
 );
 drop table reservation;
-INSERT INTO flights (companyName, places, departureStation, arrivalStation, price) values ("qatar airways" ,"20","casablaca", "dubai", "123"),("test" ,"20","casa", "new york", "2332");
-insert into dates (departdate,arrivaldate,idFlight) values ('21-12-17 10:34:09 AM','21-12-17 12:34:09 AM', 4 );
-INSERT into escale (idFlight) values (4);
+INSERT INTO flights (companyName, places, departureStation, arrivalStation, price) values ("Expidia" ,"20","casablanca", "madrid", "123"),("Royal Air Maroc" ,"20","marrakech", "paris", "2332");
+insert into dates (departdate,arrivaldate,idFlight) values ('22-01-19 10:34:09 AM','22-01-19 3:34:09 PM', 9 );
+INSERT into escale (idFlight) values (9);

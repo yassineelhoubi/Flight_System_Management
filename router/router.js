@@ -40,13 +40,11 @@ module.exports = routes = {
                 let minutes = String(today.getMinutes()).padStart(2, "0");
                 let seconds = String(today.getSeconds()).padStart(2, "0");
                 // YYYY-MM-DD H:M:S
-                
+
                 let dateTime = obj.fields.departDate + ' ' + hours + ':' + minutes + ':' + seconds;
-                
+
                 let fetchedData = await fetcher.get(Queries.getFlights(obj.fields.departStation, obj.fields.arrivalStation, dateTime));
-                // flights = await db.get(fetch.getFlights(obj.fields.DepartStation, obj.fields.ArrivalStation, DATETIME));
-                
-                console.log("this is ", fetchedData     );
+                console.log(fetchedData);
                 ejs.renderFile('./views/bookFlights.ejs', { name: "test" }, function (err, str) {
                     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                     if (err) {
@@ -74,9 +72,17 @@ module.exports = routes = {
 
         let dateTime = year + '-' + mounth + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
 
-        let fetchedData = await fetcher.get(Queries.getAllValidFlights(dateTime));
+        let fetchedData = await fetcher.get(Queries.getFlightsStation(dateTime));
+        // console.log(fetchedData)
+        const dataObj = JSON.parse(JSON.stringify(fetchedData))
+        departStation = dataObj.map((e) => e.departureStation);
+        arrivalStation = dataObj.map((e) => e.arrivalStation);
+        let finalDepartStation = [...new Set(departStation)]
+        let finalArrivalStation = [...new Set(arrivalStation)]
 
-        ejs.renderFile('./views/index.ejs', { data: fetchedData }, function (err, str) {
+
+
+        ejs.renderFile('./views/index.ejs', { departStation: finalDepartStation, arrivalStation: finalArrivalStation }, function (err, str) {
             res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
             if (err) {
                 console.log(err)
