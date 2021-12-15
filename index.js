@@ -35,7 +35,7 @@ const server = http.createServer(function (req, res) {
 
     //pass data incase we need info about the request
     //pass the response object because router is outside our scope
-    route(data, res);
+    route(data, res , req);
 
 });
 

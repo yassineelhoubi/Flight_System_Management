@@ -18,14 +18,14 @@
             <section id="header" class="d-flex align-items-center mx-auto">
                 <div class="constainer lg-w-75 sm-w-100 mx-5 mx-lg-auto ">
 
-                    <form class="main-form w-100">
+                    <form class="main-form w-100" action="book_flights" method="POST">
                         <h3 class="litle_card">Travel Organization</h3>
                         <div class="row">
                             <div class="col-md-9">
                                 <div class="row">
                                     <div class=" col-sm-6 col-12">
                                         <label>City Departure</label>
-                                        <select class="form-control" name="Any">
+                                        <select class="form-control" name="departStation">
                                             <option hidden selected>City</option>
                                             <option>Safi</option>
                                             <option>Casa</option>
@@ -35,7 +35,7 @@
                                     </div>
                                     <div class=" col-sm-6 col-12">
                                         <label>arrival city</label>
-                                        <select class="form-control" name="Any">
+                                        <select class="form-control" name="arrivalStation">
                                             <option hidden selected>City</option>
                                             <option>Safi</option>
                                             <option>Casa</option>
@@ -46,7 +46,7 @@
 
                                     <div class=" col-sm-6 col-12">
                                         <label>departure date</label>
-                                        <input class="form-control" type="date" type="text" name="Any">
+                                        <input class="form-control" type="date" type="text" name="departDate">
                                     </div>
                                     <div class=" col-sm-6 col-12">
                                         <label>Arrival date</label>
@@ -57,7 +57,8 @@
                             </div>
                             <div
                                 class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 d-flex align-items-center justify-content-center">
-                                <a href="#" class="btn btn-primary">Search</a>
+                                <input type="submit" value="Search" class="btn btn-primary">
+                                <!-- <a href="#" class="btn btn-primary">Search</a> -->
                             </div>
                         </div>
                     </form>

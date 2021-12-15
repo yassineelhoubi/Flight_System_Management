@@ -7,6 +7,10 @@ const Queries = require('../Queries/index')
 
 const path = require('path')
 
+const formidable = require('formidable');
+
+var util = require('util');
+
 module.exports = routes = {
     assets: function (data, res) {
         let assets = fs.readFileSync(path.join(__dirname + "/.." + data.url));
@@ -14,22 +18,49 @@ module.exports = routes = {
         res.write(assets);
         res.end("\n");
     },
-    bookFlights: function (data, res) {
-        ejs.renderFile('./views/book-flights.ejs', { name: "test" }, function (err, str) {
-            res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
-            if (err) {
-                console.log(err)
-                res.end();
-            } else {
-                res.end(str);
-            }
-        });
+    book_flights: function (data, res, req) {
+        let flights = [];
+        // get the inserted data from front 
+        if (req.method === "POST") {
+
+            let form = new formidable.IncomingForm();
+            form.parse(req, async function (err, fields, files) {
+
+                //handle errors
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                let obj;
+                util.inspect(obj = { fields: fields, files: files })
+
+                let today = new Date();
+
+                let hours = String(today.getHours()).padStart(2, "0");
+                let minutes = String(today.getMinutes()).padStart(2, "0");
+                let seconds = String(today.getSeconds()).padStart(2, "0");
+                // YYYY-MM-DD H:M:S
+                
+                let dateTime = obj.fields.departDate + ' ' + hours + ':' + minutes + ':' + seconds;
+                
+                let fetchedData = await fetcher.get(Queries.getFlights(obj.fields.departStation, obj.fields.arrivalStation, dateTime));
+                // flights = await db.get(fetch.getFlights(obj.fields.DepartStation, obj.fields.ArrivalStation, DATETIME));
+                
+                console.log("this is ", fetchedData     );
+                ejs.renderFile('./views/bookFlights.ejs', { name: "test" }, function (err, str) {
+                    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
+                    if (err) {
+                        console.log(err)
+                        res.end();
+                    } else {
+                        res.end(str);
+                    }
+                });
+            })
+        }
     },
     index: async function (data, res) {
-        // let html = ejs.render(fs.readFileSync("./views/home.ejs", "utf8"));
-        //   res.writeHead(200);
-        //   res.write(html);
-        //   res.end("\n");
+
 
         let today = new Date();
 
@@ -42,10 +73,10 @@ module.exports = routes = {
         let seconds = String(today.getSeconds()).padStart(2, "0");
 
         let dateTime = year + '-' + mounth + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
-        console.log(dateTime);
-        let fetchedData = await fetcher.get(Queries.getFlights(dateTime));
-        console.log(fetchedData);
-        ejs.renderFile('./views/index.ejs', { name: fetchedData }, function (err, str) {
+
+        let fetchedData = await fetcher.get(Queries.getAllValidFlights(dateTime));
+
+        ejs.renderFile('./views/index.ejs', { data: fetchedData }, function (err, str) {
             res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
             if (err) {
                 console.log(err)
