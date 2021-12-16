@@ -26,7 +26,8 @@
                             </h2>
                         </div>
                     </div>
-                    <form action="test" method="post">
+                    <form action="submit" method="post">
+                        <input type="hidden" name="idFlight" value="<%= data.id%>">
                         <div class="row mb-5">
                             <!-- Booking Info -->
                             <div class="col-md-6 mt-3 containers-group">
@@ -71,7 +72,7 @@
                                         <label for="inputPassword" class="col-sm-5 col-form-label">Number of
                                             Places</label>
                                         <div class="col-sm-7">
-                                            <input type="number" name="nbrPhone" class="form-control"
+                                            <input type="number" name="nbrPlaces" class="form-control"
                                                 placeholder="Enter your the Number of Places">
                                         </div>
                                     </div>
@@ -87,7 +88,7 @@
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text me-3">
-                                                    <input type="checkbox"
+                                                    <input type="checkbox" name="hotel"
                                                         aria-label="Checkbox for following text input">
                                                 </div>
                                             </div>
@@ -98,7 +99,7 @@
                                         <div class="input-group ">
                                             <div class="input-group-prepend me-3">
                                                 <div class="input-group-text">
-                                                    <input type="checkbox"
+                                                    <input type="checkbox" name="meals"
                                                         aria-label="Checkbox for following text input">
                                                 </div>
                                             </div>
@@ -109,7 +110,7 @@
                                         <div class="input-group ">
                                             <div class="input-group-prepend me-3">
                                                 <div class="input-group-text">
-                                                    <input type="checkbox"
+                                                    <input type="checkbox" name="insurance"
                                                         aria-label="Checkbox for following text input">
                                                 </div>
                                             </div>
@@ -161,16 +162,6 @@
                         </div>
                     </form>
                 </div>
-                <!-- <div class="constainer lg-w-75 sm-w-100 mx-5 mx-lg-auto ">
-                    <% for(var i=0; i < data.length; i++) { %>
-                    <h1><%= data[i].companyName%></h1>
-                    <h1><%= data[i].id%></h1>
-                    <h1><%= data[i].places%></h1>
-                    <h1><%= data[i].departureStation%></h1>
-                    <h1><%= data[i].arrivalStation%></h1>
-                    <h1><%= data[i].price%></h1>
-                    <% } %>
-                </div> -->
 
             </section>
     </header>

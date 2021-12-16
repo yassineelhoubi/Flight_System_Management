@@ -2,6 +2,8 @@
 var ejs = require('ejs');
 const fs = require('fs');
 
+var nodemailer = require("nodemailer");
+
 const fetcher = require('../Helpers/fetcher')
 const Queries = require('../Queries/index')
 
@@ -17,6 +19,32 @@ module.exports = routes = {
         res.writeHead(200);
         res.write(assets);
         res.end("\n");
+    },
+    submit:function(data, res, req) {
+        let form = new formidable.IncomingForm();
+        form.parse(req, async function (err, fields, files) {
+
+            //handle errors
+            if (err) {
+                console.error(err);
+                return;
+            }
+            let obj;
+            obj = { fields: fields, files: files }
+            let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idFlight));
+            data = Object.assign({}, fetchedData[0], obj.fields);
+
+
+            ejs.renderFile('./views/ticket.ejs', { data: data}, function (err, str) {
+                res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
+                if (err) {
+                    console.log(err)
+                    res.end();
+                } else {
+                    res.end(str);
+                }
+            });
+    })
     },
     book_flights: function (data, res, req) {
         let flights = [];
@@ -58,8 +86,7 @@ module.exports = routes = {
         }
     },
     reserve: function (data, res, req) {
-        // let flights = [];
-        // get the inserted data from front 
+
         if (req.method === "POST") {
 
             let form = new formidable.IncomingForm();
@@ -71,12 +98,11 @@ module.exports = routes = {
                     return;
                 }
                 let obj;
-                util.inspect(obj = { fields: fields, files: files })
+                obj = { fields: fields, files: files }
                 let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idvol));
-                const dataObj = fetchedData[0] 
-                console.log("sf",dataObj);
 
-                ejs.renderFile('./views/reserve.ejs', { data: dataObj }, function (err, str) {
+
+                ejs.renderFile('./views/reserve.ejs', { data: fetchedData[0]  }, function (err, str) {
                     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                     if (err) {
                         console.log(err)
