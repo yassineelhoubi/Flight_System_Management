@@ -44,8 +44,39 @@ module.exports = routes = {
                 let dateTime = obj.fields.departDate + ' ' + hours + ':' + minutes + ':' + seconds;
 
                 let fetchedData = await fetcher.get(Queries.getFlights(obj.fields.departStation, obj.fields.arrivalStation, dateTime));
-
+                console.log(fetchedData)
                 ejs.renderFile('./views/bookFlights.ejs', { data: fetchedData }, function (err, str) {
+                    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
+                    if (err) {
+                        console.log(err)
+                        res.end();
+                    } else {
+                        res.end(str);
+                    }
+                });
+            })
+        }
+    },
+    reserve: function (data, res, req) {
+        // let flights = [];
+        // get the inserted data from front 
+        if (req.method === "POST") {
+
+            let form = new formidable.IncomingForm();
+            form.parse(req, async function (err, fields, files) {
+
+                //handle errors
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                let obj;
+                util.inspect(obj = { fields: fields, files: files })
+                let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idvol));
+                const dataObj = fetchedData[0] 
+                console.log("sf",dataObj);
+
+                ejs.renderFile('./views/reserve.ejs', { data: dataObj }, function (err, str) {
                     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                     if (err) {
                         console.log(err)
@@ -74,11 +105,13 @@ module.exports = routes = {
 
         let fetchedData = await fetcher.get(Queries.getFlightsStation(dateTime));
         // console.log(fetchedData)
-        const dataObj = JSON.parse(JSON.stringify(fetchedData))
-        departStation = dataObj.map((e) => e.departureStation);
-        arrivalStation = dataObj.map((e) => e.arrivalStation);
+        // const dataObj = JSON.parse(JSON.stringify(fetchedData))
+        // const dataObj = fetchedData
+        departStation = fetchedData.map((e) => e.departureStation);
+        arrivalStation = fetchedData.map((e) => e.arrivalStation);
         let finalDepartStation = [...new Set(departStation)]
         let finalArrivalStation = [...new Set(arrivalStation)]
+
 
 
 

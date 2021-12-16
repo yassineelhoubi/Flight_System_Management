@@ -1,2 +1,14 @@
 @import './header';
 @import './book-flights';
+@import './reserve';
+
+.body {
+    // margin-top: 20px;
+    background-color: #e4e6e9;
+
+    color: #f1f2f8;
+}
+*{
+    font-family:"Skyscanner Relative", -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+

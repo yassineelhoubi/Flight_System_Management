@@ -1,0 +1,32 @@
+.header-box {
+    clip-path: polygon(50% 0%, 100% 0, 100% 80%, 60% 80%, 57% 80%, 50% 100%, 42% 80%, 40% 80%, 0 80%, 0 0);
+    // height: 300px;
+    background-color: #042759;
+    color: #fff;
+    h1 {
+        font-weight: 700;
+    }
+    h2 {
+        font-weight: 400;
+    }
+}
+
+
+.containers-group {
+    color: #042759;
+    h1 {
+        font-weight: 700;
+    }
+}
+.container-info {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
