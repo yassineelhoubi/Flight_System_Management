@@ -3,7 +3,13 @@ var ejs = require('ejs');
 const fs = require('fs');
 
 var nodemailer = require("nodemailer");
-
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'thisfortestnode@gmail.com',
+      pass: 'az12er34'
+    }
+  });
 const fetcher = require('../Helpers/fetcher')
 const Queries = require('../Queries/index')
 
@@ -32,18 +38,34 @@ module.exports = routes = {
             let obj;
             obj = { fields: fields, files: files }
             let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idFlight));
-            data = Object.assign({}, fetchedData[0], obj.fields);
+            var dataObj = Object.assign({}, fetchedData[0], obj.fields);
 
 
-            ejs.renderFile('./views/ticket.ejs', { data: data}, function (err, str) {
+             ejs.renderFile('./views/ticket.ejs', { data: dataObj}, async function (err, str) {
                 res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                 if (err) {
                     console.log(err)
                     res.end();
                 } else {
-                    res.end(str);
+                    const html = await ejs.renderFile("./views/ticket.ejs",{data: dataObj})
+                    var mainOptions =  {
+                        from: '"Tester" testmail@zoho.com',
+                        to: "elhoubiyassine@gmail.com",
+                        subject: 'Hello,'+dataObj.fName,
+                        html: html
+                    };
+
+                    transporter.sendMail(mainOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('Message sent: ' + info.response);
+                        }
+                    });
+                    res.end(str);   
                 }
             });
+            
     })
     },
     book_flights: function (data, res, req) {
