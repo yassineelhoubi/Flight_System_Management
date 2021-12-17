@@ -6,12 +6,13 @@ var nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'thisfortestnode@gmail.com',
-      pass: 'az12er34'
+        user: 'thisfortestnode@gmail.com',
+        pass: 'az12er34'
     }
-  });
+});
 const fetcher = require('../Helpers/fetcher')
 const Queries = require('../Queries/index')
+const Mutations = require("../Mutations");
 
 const path = require('path')
 
@@ -26,7 +27,7 @@ module.exports = routes = {
         res.write(assets);
         res.end("\n");
     },
-    submit:function(data, res, req) {
+    submit: function (data, res, req) {
         let form = new formidable.IncomingForm();
         form.parse(req, async function (err, fields, files) {
 
@@ -38,20 +39,27 @@ module.exports = routes = {
             let obj;
             obj = { fields: fields, files: files }
             let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idFlight));
+
             var dataObj = Object.assign({}, fetchedData[0], obj.fields);
 
+            if (dataObj.nbrPlaces <= dataObj.places) {
+                let client = await fetcher.post(Mutations.addClient(dataObj.fName, dataObj.lName, dataObj.email, dataObj.nbrPhone))
+                let reservation = await fetcher.post(Mutations.addReservation(dataObj.nbrPhone, dataObj.idFlight, client.insertId))
+            } else {
+                
+            }
 
-             ejs.renderFile('./views/ticket.ejs', { data: dataObj}, async function (err, str) {
+            ejs.renderFile('./views/ticket.ejs', { data: dataObj }, async function (err, str) {
                 res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                 if (err) {
                     console.log(err)
                     res.end();
                 } else {
-                    const html = await ejs.renderFile("./views/ticket.ejs",{data: dataObj})
-                    var mainOptions =  {
+                    const html = await ejs.renderFile("./views/ticket.ejs", { data: dataObj })
+                    var mainOptions = {
                         from: '"Tester" testmail@zoho.com',
                         to: "elhoubiyassine@gmail.com",
-                        subject: 'Hello,'+dataObj.fName,
+                        subject: 'Hello,' + dataObj.fName,
                         html: html
                     };
 
@@ -62,11 +70,11 @@ module.exports = routes = {
                             console.log('Message sent: ' + info.response);
                         }
                     });
-                    res.end(str);   
+                    res.end(str);
                 }
             });
-            
-    })
+
+        })
     },
     book_flights: function (data, res, req) {
         let flights = [];
@@ -124,7 +132,7 @@ module.exports = routes = {
                 let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idvol));
 
 
-                ejs.renderFile('./views/reserve.ejs', { data: fetchedData[0]  }, function (err, str) {
+                ejs.renderFile('./views/reserve.ejs', { data: fetchedData[0] }, function (err, str) {
                     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                     if (err) {
                         console.log(err)
