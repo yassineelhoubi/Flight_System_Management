@@ -61,7 +61,7 @@ module.exports = routes = {
                             subject: 'Hello,' + dataObj.fName,
                             html: html
                         };
-    
+
                         transporter.sendMail(mainOptions, function (err, info) {
                             if (err) {
                                 console.log(err);
@@ -72,9 +72,11 @@ module.exports = routes = {
                         res.end(str);
                     }
                 });
-            } 
+            }
             // If seats are not available
             else {
+                // Add a value to the object to know that seats are not available
+                dataObj.seats = true;
                 // return to the reserve template
                 ejs.renderFile('./views/reserve.ejs', { data: dataObj }, function (err, str) {
                     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
