@@ -18,7 +18,6 @@ const path = require('path')
 
 const formidable = require('formidable');
 
-var util = require('util');
 
 module.exports = routes = {
     assets: function (data, res) {
@@ -41,38 +40,54 @@ module.exports = routes = {
             let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idFlight));
 
             var dataObj = Object.assign({}, fetchedData[0], obj.fields);
-
+            // If seats are available
             if (dataObj.nbrPlaces <= dataObj.places) {
+                // insert into Client
                 let client = await fetcher.post(Mutations.addClient(dataObj.fName, dataObj.lName, dataObj.email, dataObj.nbrPhone))
-                let reservation = await fetcher.post(Mutations.addReservation(dataObj.nbrPhone, dataObj.idFlight, client.insertId))
-            } else {
-                
+                // inserto into reservation
+                let reservation = await fetcher.post(Mutations.addReservation(dataObj.nbrPlaces, dataObj.idFlight, client.insertId))
+                // render ticket template
+                ejs.renderFile('./views/ticket.ejs', { data: dataObj }, async function (err, str) {
+                    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
+                    if (err) {
+                        console.log(err)
+                        res.end();
+                    } else {
+                        // send email
+                        const html = await ejs.renderFile("./views/ticket.ejs", { data: dataObj })
+                        var mainOptions = {
+                            from: '"Tester" testmail@zoho.com',
+                            to: "elhoubiyassine@gmail.com",
+                            subject: 'Hello,' + dataObj.fName,
+                            html: html
+                        };
+    
+                        transporter.sendMail(mainOptions, function (err, info) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                        res.end(str);
+                    }
+                });
+            } 
+            // If seats are not available
+            else {
+                // return to the reserve template
+                ejs.renderFile('./views/reserve.ejs', { data: dataObj }, function (err, str) {
+                    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
+                    if (err) {
+                        console.log(err)
+                        res.end();
+                    } else {
+                        res.end(str);
+                    }
+                });
+                return;
             }
 
-            ejs.renderFile('./views/ticket.ejs', { data: dataObj }, async function (err, str) {
-                res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
-                if (err) {
-                    console.log(err)
-                    res.end();
-                } else {
-                    const html = await ejs.renderFile("./views/ticket.ejs", { data: dataObj })
-                    var mainOptions = {
-                        from: '"Tester" testmail@zoho.com',
-                        to: "elhoubiyassine@gmail.com",
-                        subject: 'Hello,' + dataObj.fName,
-                        html: html
-                    };
-
-                    transporter.sendMail(mainOptions, function (err, info) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log('Message sent: ' + info.response);
-                        }
-                    });
-                    res.end(str);
-                }
-            });
 
         })
     },
@@ -90,7 +105,7 @@ module.exports = routes = {
                     return;
                 }
                 let obj;
-                util.inspect(obj = { fields: fields, files: files })
+                obj = { fields: fields, files: files }
 
                 let today = new Date();
 
@@ -102,7 +117,7 @@ module.exports = routes = {
                 let dateTime = obj.fields.departDate + ' ' + hours + ':' + minutes + ':' + seconds;
 
                 let fetchedData = await fetcher.get(Queries.getFlights(obj.fields.departStation, obj.fields.arrivalStation, dateTime));
-                console.log(fetchedData)
+
                 ejs.renderFile('./views/bookFlights.ejs', { data: fetchedData }, function (err, str) {
                     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                     if (err) {
