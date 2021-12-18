@@ -155,11 +155,9 @@ module.exports = routes = {
         let seconds = String(today.getSeconds()).padStart(2, "0");
 
         let dateTime = year + '-' + mounth + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
-
+        let date = year + '-' + mounth + '-' + day;
         let fetchedData = await fetcher.get(Queries.getFlightsStation(dateTime));
-        // console.log(fetchedData)
-        // const dataObj = JSON.parse(JSON.stringify(fetchedData))
-        // const dataObj = fetchedData
+
         departStation = fetchedData.map((e) => e.departureStation);
         arrivalStation = fetchedData.map((e) => e.arrivalStation);
         let finalDepartStation = [...new Set(departStation)]
@@ -168,7 +166,7 @@ module.exports = routes = {
 
 
 
-        ejs.renderFile('./views/index.ejs', { departStation: finalDepartStation, arrivalStation: finalArrivalStation }, function (err, str) {
+        ejs.renderFile('./views/index.ejs', { departStation: finalDepartStation, arrivalStation: finalArrivalStation ,date:date}, function (err, str) {
             res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
             if (err) {
                 console.log(err)
