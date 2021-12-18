@@ -2,17 +2,10 @@
 var ejs = require('ejs');
 const fs = require('fs');
 
-var nodemailer = require("nodemailer");
-var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'thisfortestnode@gmail.com',
-        pass: 'az12er34'
-    }
-});
 const fetcher = require('../Helpers/fetcher')
 const Queries = require('../Queries/index')
 const Mutations = require("../Mutations");
+const mailer = require("../Helpers/mailer.js");
 
 const path = require('path')
 
@@ -55,20 +48,7 @@ module.exports = routes = {
                     } else {
                         // send email
                         const html = await ejs.renderFile("./views/ticket.ejs", { data: dataObj })
-                        var mainOptions = {
-                            from: '"Tester" testmail@zoho.com',
-                            to: "elhoubiyassine@gmail.com",
-                            subject: 'Hello,' + dataObj.fName,
-                            html: html
-                        };
-
-                        transporter.sendMail(mainOptions, function (err, info) {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
+                        await mailer(html, dataObj.email, dataObj.fName, dataObj.lName);
                         res.end(str);
                     }
                 });
