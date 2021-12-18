@@ -4,7 +4,7 @@ var con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "flight_system_management"
+  database: "a"
 
 });
 
