@@ -14,15 +14,17 @@ const formidable = require('formidable');
 
 module.exports = routes = {
     assets: function (data, res) {
+        // for statis files (css, img,...)
         let assets = fs.readFileSync(path.join(__dirname + "/.." + data.url));
         res.writeHead(200);
         res.write(assets);
         res.end("\n");
     },
     submit: function (data, res, req) {
+        // parsing form data
         let form = new formidable.IncomingForm();
-        form.parse(req, async function (err, fields, files) {
 
+        form.parse(req, async function (err, fields, files) {
             //handle errors
             if (err) {
                 console.error(err);
@@ -31,7 +33,7 @@ module.exports = routes = {
             let obj;
             obj = { fields: fields, files: files }
             let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idFlight));
-
+            // Concatenate two object
             var dataObj = Object.assign({}, fetchedData[0], obj.fields);
             // If seats are available
             if (dataObj.nbrPlaces <= dataObj.places) {
@@ -74,13 +76,12 @@ module.exports = routes = {
         })
     },
     book_flights: function (data, res, req) {
-        let flights = [];
         // get the inserted data from front 
         if (req.method === "POST") {
-
+            // parsing form data
             let form = new formidable.IncomingForm();
-            form.parse(req, async function (err, fields, files) {
 
+            form.parse(req, async function (err, fields, files) {
                 //handle errors
                 if (err) {
                     console.error(err);
@@ -88,7 +89,7 @@ module.exports = routes = {
                 }
                 let obj;
                 obj = { fields: fields, files: files }
-
+                //Synthesizing a consistent date
                 let today = new Date();
 
                 let hours = String(today.getHours()).padStart(2, "0");
@@ -97,7 +98,7 @@ module.exports = routes = {
                 // YYYY-MM-DD H:M:S
 
                 let dateTime = obj.fields.departDate + ' ' + hours + ':' + minutes + ':' + seconds;
-
+                // get flights with depart station and arrival station and dateTime
                 let fetchedData = await fetcher.get(Queries.getFlights(obj.fields.departStation, obj.fields.arrivalStation, dateTime));
 
                 ejs.renderFile('./views/bookFlights.ejs', { data: fetchedData }, function (err, str) {
@@ -115,10 +116,10 @@ module.exports = routes = {
     reserve: function (data, res, req) {
 
         if (req.method === "POST") {
-
+            // parsing form data
             let form = new formidable.IncomingForm();
-            form.parse(req, async function (err, fields, files) {
 
+            form.parse(req, async function (err, fields, files) {
                 //handle errors
                 if (err) {
                     console.error(err);
@@ -126,8 +127,8 @@ module.exports = routes = {
                 }
                 let obj;
                 obj = { fields: fields, files: files }
+                // get Flight info
                 let fetchedData = await fetcher.get(Queries.getFlightInfo(obj.fields.idvol));
-
 
                 ejs.renderFile('./views/reserve.ejs', { data: fetchedData[0] }, function (err, str) {
                     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
@@ -142,10 +143,8 @@ module.exports = routes = {
         }
     },
     index: async function (data, res) {
-
-
         let today = new Date();
-
+        //Synthesizing a consistent date
         let year = String(today.getFullYear()).padStart(2, "0");
         let mounth = String(today.getMonth() + 1).padStart(2, "0");
         let day = String(today.getDate()).padStart(2, "0");
@@ -153,20 +152,19 @@ module.exports = routes = {
         let hours = String(today.getHours()).padStart(2, "0");
         let minutes = String(today.getMinutes()).padStart(2, "0");
         let seconds = String(today.getSeconds()).padStart(2, "0");
-
+        // YYYY-MM-DD H:M:S
         let dateTime = year + '-' + mounth + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
+        // YYYY-MM-DD 
         let date = year + '-' + mounth + '-' + day;
+        // get flights available
         let fetchedData = await fetcher.get(Queries.getFlightsStation(dateTime));
-
+        // Get cities and remove duplicates
         departStation = fetchedData.map((e) => e.departureStation);
         arrivalStation = fetchedData.map((e) => e.arrivalStation);
         let finalDepartStation = [...new Set(departStation)]
         let finalArrivalStation = [...new Set(arrivalStation)]
-
-
-
-
-        ejs.renderFile('./views/index.ejs', { departStation: finalDepartStation, arrivalStation: finalArrivalStation ,date:date}, function (err, str) {
+        // 
+        ejs.renderFile('./views/index.ejs', { departStation: finalDepartStation, arrivalStation: finalArrivalStation, date: date }, function (err, str) {
             res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
             if (err) {
                 console.log(err)
@@ -175,12 +173,6 @@ module.exports = routes = {
                 res.end(str);
             }
         });
-    },
-    test: function (data, res) {
-        let html = ejs.render(fs.readFileSync("./views/test.ejs", "utf8"));
-        res.writeHead(200);
-        res.write(html);
-        res.end("\n");
     },
     404: function (data, res) {
         let html = ejs.render(fs.readFileSync("./views/404.ejs", "utf8"));
