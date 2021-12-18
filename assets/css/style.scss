@@ -3,11 +3,11 @@
 @import './reserve';
 
 
-.body {
+body {
     // margin-top: 20px;
-    background-color: #e4e6e9;
+    background-color: #e4e6e9 !important;
 
-    color: #f1f2f8;
+    color: #f1f2f8 !important;
 }
 *{
     font-family:"Skyscanner Relative", -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
